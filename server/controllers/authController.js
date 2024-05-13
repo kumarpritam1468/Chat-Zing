@@ -2,8 +2,35 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/userModel.js');
 const generateJwtSetCookie = require('../utils/createToken.js');
 
-const logIn = (req, res) => {
-    res.send('Login');
+const logIn = async (req, res) => {
+    try {
+        const {userName, password} = req.body;
+
+        const user = await User.findOne({userName});
+
+        if(!user){
+            return res.status(401).json({message: "Invalid Credentials"});
+        }
+
+        const isPasswordCorrect = await bcrypt.compare(password, user.password || '');
+
+        if(!isPasswordCorrect){
+            return res.status(401).json({message: "Invalid Credentials"});
+        }
+
+        generateJwtSetCookie(user._id, res);
+
+        res.status(200).json({
+            _id: user._id,
+            fullName: user.fullName,
+            userName: user.userName,
+            profilePic: user.profilePic
+        })
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({message: "Internal Server Error"});
+    }
 }
 
 const logOut = (req, res) => {
@@ -55,7 +82,7 @@ const signUp = async (req, res) => {
             return res.status(400).json({message: "Invalid User data"})
         }
     } catch (error) {
-        console.error(error);
+        res.status(500).json({message: "Internal Server Error"});
     }
 }
 
