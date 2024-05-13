@@ -1,4 +1,6 @@
+const bcrypt = require('bcryptjs');
 const User = require('../models/userModel.js');
+const generateJwtSetCookie = require('../utils/createToken.js');
 
 const logIn = (req, res) => {
     res.send('Login');
@@ -24,25 +26,34 @@ const signUp = async (req, res) => {
 
         // Password Hashing
 
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
         const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${userName}`;
         const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${userName}`;
 
         const newUser = new User({
             fullName,
             userName,
-            password,
+            password: hashedPassword,
             gender,
             profilePic: gender === 'male' ? boyProfilePic : girlProfilePic
         });
 
-        await newUser.save();
+        if (newUser) {
+            generateJwtSetCookie(newUser._id, res);
+            await newUser.save();
 
-        res.status(201).json({
-            _id: newUser._id,
-            fullName: newUser.fullName,
-            userName: newUser.userName,
-            profilePic: newUser.profilePic
-        })
+            res.status(201).json({
+                _id: newUser._id,
+                fullName: newUser.fullName,
+                userName: newUser.userName,
+                password: newUser.password,
+                profilePic: newUser.profilePic
+            })
+        } else {
+            return res.status(400).json({message: "Invalid User data"})
+        }
     } catch (error) {
         console.error(error);
     }
