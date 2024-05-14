@@ -33,10 +33,6 @@ const logIn = async (req, res) => {
     }
 }
 
-const logOut = (req, res) => {
-    res.send('Log out');
-}
-
 const signUp = async (req, res) => {
     try {
         const { fullName, userName, password, confirmPassword, gender } = req.body;
@@ -44,18 +40,18 @@ const signUp = async (req, res) => {
         if (password !== confirmPassword) {
             return res.status(400).json({ message: 'Passwords do not match' });
         }
-
+        
         const user = await User.findOne({ userName });
-
+        
         if (user) {
             return res.status(400).json({ message: 'User Already Exists' });
         }
-
+        
         // Password Hashing
-
+        
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-
+        
         const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${userName}`;
         const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${userName}`;
 
@@ -66,11 +62,11 @@ const signUp = async (req, res) => {
             gender,
             profilePic: gender === 'male' ? boyProfilePic : girlProfilePic
         });
-
+        
         if (newUser) {
             generateJwtSetCookie(newUser._id, res);
             await newUser.save();
-
+            
             res.status(201).json({
                 _id: newUser._id,
                 fullName: newUser.fullName,
@@ -81,6 +77,15 @@ const signUp = async (req, res) => {
         } else {
             return res.status(400).json({message: "Invalid User data"})
         }
+    } catch (error) {
+        res.status(500).json({message: "Internal Server Error"});
+    }
+}
+
+const logOut = (req, res) => {
+    try {
+        res.cookie('jwt', '', {maxAge:0});
+        res.status(200).json({message: "Logged Out Successfully"});
     } catch (error) {
         res.status(500).json({message: "Internal Server Error"});
     }
