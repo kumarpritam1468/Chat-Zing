@@ -47,7 +47,6 @@ const getMessage = async (req, res) => {
         if(!conversation){
             res.status(200).json([]);
         }
-
         res.status(200).json(conversation.messages);
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error" });
