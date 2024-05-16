@@ -1,5 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+}
+
+body {
+  /* background: linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)), url('/bg.png') center/cover; */
+  background: url('/bg.png') rgba(0, 0, 0, 0.3) center/cover no-repeat;
+  background-blend-mode: darken;
+  background-attachment: fixed;
+}
+
+.label-text{
+  color: rgb(209, 213, 219);
 }
