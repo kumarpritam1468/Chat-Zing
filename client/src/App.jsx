@@ -6,6 +6,7 @@ import {
 import Login from "./pages/Login"
 import SignUp from "./pages/SignUp"
 import Home from './pages/Home';
+import {Toaster} from 'react-hot-toast';
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
     <Router>
 
       <div className=" p-4 flex justify-center items-center h-screen w-screen">
+        <Toaster/>
         <Routes>
           <Route path='/' element={<Home/>} />
           <Route path='/login' element={<Login/>} />

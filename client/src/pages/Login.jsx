@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const Login = () => {
+  const [inputs, setInputs] = useState({
+    userName: '',
+    password: ''
+  });
+
   return (
     <div className=' flex flex-col justify-center items-center min-w-96 mx-auto'>
 
@@ -16,14 +21,14 @@ const Login = () => {
             <label className=' label p-2'>
               <span className=' text-base label-text'>Username</span>
             </label>
-            <input type="text" placeholder='Enter Username' className=' w-full input input-bordered h-10' />
+            <input type="text" placeholder='Enter Username' className=' w-full input input-bordered h-10' onChange={(e) => setInputs({ ...inputs, userName: e.target.value })} />
           </div>
 
           <div>
             <label className=' label p-2'>
               <span className=' text-base label-text'>Password</span>
             </label>
-            <input type="password" placeholder='Enter Password' className=' w-full input input-bordered h-10' />
+            <input type="password" placeholder='Enter Password' className=' w-full input input-bordered h-10' onChange={(e) => setInputs({ ...inputs, password: e.target.value })}  />
           </div>
 
           <Link to='/signup' className=' text-sm text-gray-300 hover:underline hover:text-blue-400 mt-4 ml-2 inline-block transition-all duration-300 ease-in-out'>

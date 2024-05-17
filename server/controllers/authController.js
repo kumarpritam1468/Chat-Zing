@@ -71,7 +71,6 @@ const signUp = async (req, res) => {
                 _id: newUser._id,
                 fullName: newUser.fullName,
                 userName: newUser.userName,
-                password: newUser.password,
                 profilePic: newUser.profilePic
             })
         } else {
