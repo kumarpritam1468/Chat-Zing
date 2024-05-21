@@ -31,7 +31,7 @@ const sendMessage = async (req, res) => {
 
         res.status(200).json(newMessage);
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error" });
+        res.status(500).json({ error: "Internal Server Error" });
     }
 }
 
@@ -45,11 +45,11 @@ const getMessage = async (req, res) => {
         }).populate("messages"); // Actual message instead of reference
 
         if(!conversation){
-            res.status(200).json([]);
+            return res.status(200).json([]);
         }
         res.status(200).json(conversation.messages);
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error" });
+        res.status(500).json(error);
     }
 }
 
