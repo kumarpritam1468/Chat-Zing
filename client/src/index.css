@@ -11,6 +11,11 @@
 body {
   /* background: linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)), url('/bg.png') center/cover; */
   background: url('/bg.png') rgba(0, 0, 0, 0.3) center/cover no-repeat;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-blend-mode: darken;
   background-attachment: fixed;
 }
@@ -64,5 +69,21 @@ body {
   40%,
   60% {
     transform: translate3d(4px, 0, 0);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .phone-hidden {
+    display: none;
+  }
+
+  .phone-flex {
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  html {
+    font-size: 120%;
   }
 }
