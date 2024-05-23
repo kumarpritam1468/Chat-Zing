@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 
 const authRoute = require('./routes/authRoute.js');
 const messageRoute = require('./routes/messageRoute.js');
@@ -8,6 +9,8 @@ const usersRoute = require('./routes/usersRoute.js');
 
 const connectMongoDB = require('./db/conn.js');
 const { app, server } = require('./socket/socket.js');
+
+__dirname = path.resolve();
 
 dotenv.config();
 
@@ -20,8 +23,10 @@ app.use('/api/auth', authRoute);
 app.use('/api/messages', messageRoute);
 app.use('/api/users', usersRoute);
 
-app.get('/', (req, res) => {
-    res.send("Hello World!");
+app.use(express.static(path.join(__dirname, '/client/dist')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
 })
 
 server.listen(PORT, () => {
