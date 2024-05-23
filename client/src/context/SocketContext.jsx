@@ -4,6 +4,10 @@ import io from 'socket.io-client';
 
 const SocketContext = createContext();
 
+const useSocketContext = () => {
+    return useContext(SocketContext);
+}
+
 const SocketContextProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
@@ -11,9 +15,18 @@ const SocketContextProvider = ({ children }) => {
 
     useEffect(() => {
         if(authUser){
-            const socket = io('http://localhost:5000');
+            const socket = io('http://localhost:5000', {
+                query:{
+                    userId: authUser._id
+                }
+            });
 
             setSocket(socket);
+
+            // Used to listen to events
+            socket.on('getOnlineUsers', (users) => {
+                setOnlineUsers(users);
+            })
             return () => socket.close();
         } else {
             if(socket){
@@ -21,7 +34,7 @@ const SocketContextProvider = ({ children }) => {
                 setSocket(null);
             }
         }
-    }, []);
+    }, [authUser]);
 
     return (
         <SocketContext.Provider value={{socket, onlineUsers}}>
@@ -30,4 +43,4 @@ const SocketContextProvider = ({ children }) => {
     )
 }
 
-export { SocketContextProvider };
+export { useSocketContext, SocketContextProvider };
